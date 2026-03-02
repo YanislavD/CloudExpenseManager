@@ -1,6 +1,7 @@
 package project.projectforcv.service.impl;
 
 import project.projectforcv.model.Expense;
+import project.projectforcv.model.User;
 import project.projectforcv.repository.ExpenseRepository;
 import project.projectforcv.service.ExpenseService;
 
@@ -19,15 +20,17 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public Expense createExpense(Expense expense) {
+    public Expense createExpense(String description, BigDecimal amount, User user) {
 
-        if (expense.getAmount() == null || expense.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Amount must be greater than zero");
         }
 
-        if (expense.getDate() == null) {
-            expense.setDate(LocalDate.now());
-        }
+        Expense expense = new Expense();
+        expense.setDescription(description);
+        expense.setAmount(amount);
+        expense.setDate(LocalDate.now()); // default
+        expense.setUser(user);
 
         return expenseRepository.save(expense);
     }
